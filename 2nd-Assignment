@@ -1,0 +1,64 @@
+import java.util.*;
+
+public class TrustedServers {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        long k = sc.nextLong();
+
+        long[] key = new long[n + 1];
+        for (int i = 1; i <= n; i++) {
+            key[i] = sc.nextLong();
+        }
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) adj.add(new ArrayList<>());
+
+        for (int i = 0; i < n - 1; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        int[] parent = new int[n + 1];
+        Arrays.fill(parent, -1);
+        boolean[] visited = new boolean[n + 1];
+
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(1);
+        visited[1] = true;
+        parent[1] = 0;
+
+        while (!queue.isEmpty()) {
+            int cur = queue.poll();
+            for (int next : adj.get(cur)) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    parent[next] = cur;
+                    queue.add(next);
+                }
+            }
+        }
+
+        int trustedCount = 0;
+
+        for (int node = 1; node <= n; node++) {
+            long xorValue = 0;
+            int cur = node;
+
+            while (cur != 0) {
+                xorValue ^= key[cur];
+                cur = parent[cur];
+            }
+
+            if (xorValue >= k) {
+                trustedCount++;
+            }
+        }
+
+        System.out.println(trustedCount);
+    }
+}
