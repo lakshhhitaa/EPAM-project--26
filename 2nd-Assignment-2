@@ -1,0 +1,52 @@
+import java.util.*;
+
+public class EmergencyRoute {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int d = sc.nextInt();
+
+        int[] u = new int[m];
+        int[] v = new int[m];
+
+        for (int i = 0; i < m; i++) {
+            u[i] = sc.nextInt();
+            v[i] = sc.nextInt();
+        }
+
+        int INF = Integer.MAX_VALUE;
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, INF);
+        dist[1] = 0;
+
+        for (int iter = 0; iter < n - 1; iter++) {
+            boolean updated = false;
+            for (int i = 0; i < m; i++) {
+                int a = u[i];
+                int b = v[i];
+
+                if (dist[a] != INF && dist[a] + 1 < dist[b]) {
+                    dist[b] = dist[a] + 1;
+                    updated = true;
+                }
+                if (dist[b] != INF && dist[b] + 1 < dist[a]) {
+                    dist[a] = dist[b] + 1;
+                    updated = true;
+                }
+            }
+            if (!updated) break;
+        }
+
+        int count = 0;
+        for (int i = 1; i <= n; i++) {
+            if (dist[i] != INF && dist[i] <= d) {
+                count++;
+            }
+        }
+
+        System.out.println(count);
+    }
+}
